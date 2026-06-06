@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chiraila Cricket Tournament 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏏</text></svg>" />
+</head>
+<body>
+
+<!-- ANNOUNCE BAR -->
+<div class="announce-bar">
+  🏏 Chiraila Cricket Tournament 2026mein Registration ab khuli hai! &nbsp;
+  <a href="#register">Abhi Register Karein →</a>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🏏</div>
+      <div class="logo-text">
+        <h1>CHIRAILA CRICKET</h1>
+        <span>Tournament 2026</span>
+      </div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="#home" class="active">🏠 Home</a></li>
+      <li><a href="#live">🔴 Live Score</a></li>
+      <li><a href="#schedule">📅 Schedule</a></li>
+      <li><a href="#points">🏆 Points Table</a></li>
+      <li><a href="#videos">🎥 Videos</a></li>
+      <li><a href="#register">📝 Register</a></li>
+      <li><a href="admin.html" style="color:#f4c430">⚙️ Admin</a></li>
+    </ul>
+    <div class="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="home">
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">🏏 Cricket Tournament 2026</div>
+      <h1>CHIRAILA <span>CRICKET</span><br>TOURNAMENT</h1>
+      <p>Hamare gaon ka sabse bada cricket event! Teams register karein, matches dekhen aur champion ban kar dikhaein. Pure josh aur excitement ke saath!</p>
+      <div class="hero-buttons">
+        <a href="#register" class="btn-primary">📝 Register Now</a>
+        <a href="#live" class="btn-secondary">🔴 Live Score</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>🗓️ Tournament Details</h3>
+      <div class="info-item">
+        <div class="info-icon">📅</div>
+        <div class="info-text">
+          <label>Start Date</label>
+          <span>June 08, 2026</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🏟️</div>
+        <div class="info-text">
+          <label>Venue</label>
+          <span>Chiraila Cricket Ground</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🏏</div>
+        <div class="info-text">
+          <label>Format</label>
+          <span>T8 (08-80 Overs)</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">👥</div>
+        <div class="info-text">
+          <label>Teams</label>
+          <span>32 Teams (8 Players each)</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">💰</div>
+        <div class="info-text">
+          <label>Entry Fee</label>
+          <span>₹1100 per team</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-container">
+    <div class="stat-item">
+      <div class="stat-number" data-count="16" data-suffix="+">0</div>
+      <div class="stat-label">Teams</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-count="176" data-suffix="+">0</div>
+      <div class="stat-label">Players</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-count="30" data-suffix="+">0</div>
+      <div class="stat-label">Matches</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-count="50000">0</div>
+      <div class="stat-label">Prize Pool (₹)</div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE SCORE SECTION -->
+<section class="section" id="live">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Real-Time</span>
+      <h2>Live Score</h2>
+      <p>Match ka live score yahan dekhen. Har 15 second mein automatically update hota hai.</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE UPDATES
+    </div>
+
+    <div id="liveScores">
+      <!-- Loaded by JS -->
+    </div>
+
+    <div class="tabs-wrapper" style="margin-top:40px">
+      <div class="section-header" style="text-align:left;margin-bottom:20px">
+        <h3 style="font-family:'Rajdhani',sans-serif;font-size:24px;color:var(--primary-dark)">Match Results</h3>
+      </div>
+      <div id="allMatches">
+        <!-- Loaded by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE SECTION -->
+<section class="section section-alt" id="schedule">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Calendar</span>
+      <h2>Match Schedule</h2>
+      <p>Aane wale sabhi matches ka schedule</p>
+      <div class="divider"></div>
+    </div>
+    <div class="schedule-list" id="scheduleList">
+      <!-- Loaded by JS, default shown if empty -->
+    </div>
+
+    <!-- Default schedule if none in localStorage -->
+    <div id="defaultSchedule">
+      <div class="schedule-item">
+        <div class="schedule-date">
+          <div class="day">08</div>
+          <div class="month">Jun</div>
+        </div>
+        <div class="schedule-match">
+          <h4>Opening Ceremony + Match 1</h4>
+          <p>🕐 6:00 PM &nbsp; 📍 Chiraila Cricket Ground &nbsp; 🏏 T8</p>
+        </div>
+        <span class="match-status status-upcoming">Upcoming</span>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-date">
+          <div class="day">08</div>
+          <div class="month">Jun</div>
+        </div>
+        <div class="schedule-match">
+          <h4>Match 2 - Group A</h4>
+          <p>🕐 08:00 PM &nbsp; 📍 Chiraila Cricket Ground &nbsp; 🏏 T8</p>
+        </div>
+        <span class="match-status status-upcoming">Upcoming</span>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-date">
+          <div class="day">09</div>
+          <div class="month">Jun</div>
+        </div>
+        <div class="schedule-match">
+          <h4>Quarter Finals</h4>
+          <p>🕐 6:00 PM &nbsp; 📍 Chiraila Cricket Ground &nbsp; 🏏 T8</p>
+        </div>
+        <span class="match-status status-upcoming">Upcoming</span>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-date">
+          <div class="day">08</div>
+          <div class="month">Jun</div>
+        </div>
+        <div class="schedule-match">
+          <h4>Semi Finals</h4>
+          <p>🕐 10:00 PM &nbsp; 📍 Chiraila Cricket Ground &nbsp; 🏏 T8</p>
+        </div>
+        <span class="match-status status-upcoming">Upcoming</span>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-date">
+          <div class="day">10</div>
+          <div class="month">Jul</div>
+        </div>
+        <div class="schedule-match">
+          <h4>🏆 Grand Final</h4>
+          <p>🕐 8:00 AM &nbsp; 📍 Chiraila Cricket Ground &nbsp; 🏏 T8</p>
+        </div>
+        <span class="match-status status-upcoming">FINAL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POINTS TABLE -->
+<section class="section" id="points">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Standings</span>
+      <h2>Points Table</h2>
+      <p>Sabhi teams ki ranking aur performance</p>
+      <div class="divider"></div>
+    </div>
+    <div class="form-card" style="padding:0;overflow:hidden">
+      <table class="points-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>P</th>
+            <th>W</th>
+            <th>L</th>
+            <th>NR</th>
+            <th>NRR</th>
+            <th>Pts</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="pointsTableBody">
+          <tr>
+            <td colspan="9" style="text-align:center;color:#888;padding:30px">
+              Teams register hone ke baad points table yahan dikhega.<br>
+              <a href="admin.html" style="color:var(--primary)">Admin panel</a> se teams add karein.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:#888;display:flex;gap:20px;align-items:center">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:rgba(39,174,96,0.2);border-radius:2px;display:inline-block"></span> Qualified for Knockouts</span>
+      <span>P=Played, W=Won, L=Lost, NR=No Result, NRR=Net Run Rate, Pts=Points</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRIZE SECTION -->
+<section class="section section-alt" id="prize">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Prizes</span>
+      <h2>Prize Money</h2>
+      <p>Winner team ko milega grand prize!</p>
+      <div class="divider"></div>
+    </div>
+    <div class="prize-grid">
+      <div class="prize-card silver">
+        <div class="prize-trophy">🥈</div>
+        <div class="prize-position">Runner-Up</div>
+        <div class="prize-amount">₹3100</div>
+        <div class="prize-desc">2nd Place Trophy + Medal</div>
+      </div>
+      <div class="prize-card gold" style="transform:scale(1.05)">
+        <div class="prize-trophy">🏆</div>
+        <div class="prize-position">Champion</div>
+        <div class="prize-amount">₹61,00</div>
+        <div class="prize-desc">Winner Trophy + Medal + Certificate</div>
+      </div>
+      <div class="prize-card bronze">
+        <div class="prize-trophy">🥉</div>
+        <div class="prize-position">3rd Place</div>
+        <div class="prize-amount">Trophy</div>
+        <div class="prize-desc">3rd Place Trophy + Medal</div>
+      </div>
+    </div>
+
+    <!-- Individual Awards -->
+    <div style="margin-top:40px">
+      <h3 style="font-family:'Rajdhani',sans-serif;font-size:28px;text-align:center;color:var(--primary-dark);margin-bottom:25px">Individual Awards 🌟</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px">
+        <div class="form-card" style="padding:20px;text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">🏏</div>
+          <h4 style="color:var(--primary-dark);margin-bottom:5px">Man of the Match</h4>
+          <p style="font-size:13px;color:#888">Har match</p>
+          <div style="font-size:20px;font-weight:700;color:var(--primary)">₹101</div>
+        </div>
+        <div class="form-card" style="padding:20px;text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">⭐</div>
+          <h4 style="color:var(--primary-dark);margin-bottom:5px">Man of the Tournament</h4>
+          <p style="font-size:13px;color:#888">Best Player</p>
+          <div style="font-size:20px;font-weight:700;color:var(--primary)">₹500</div>
+        </div>
+        <div class="form-card" style="padding:20px;text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">🎯</div>
+          <h4 style="color:var(--primary-dark);margin-bottom:5px">Best Bowler</h4>
+          <p style="font-size:13px;color:#888">Most Wickets</p>
+          <div style="font-size:20px;font-weight:700;color:var(--primary)">₹101</div>
+        </div>
+        <div class="form-card" style="padding:20px;text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">🏃</div>
+          <h4 style="color:var(--primary-dark);margin-bottom:5px">Best Batsman</h4>
+          <p style="font-size:13px;color:#888">Most Runs</p>
+          <div style="font-size:20px;font-weight:700;color:var(--primary)">₹101</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RULES SECTION -->
+<section class="section" id="rules">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Guidelines</span>
+      <h2>Tournament Rules</h2>
+      <p>Sabhi teams in rules ko follow karna zaroori hai</p>
+      <div class="divider"></div>
+    </div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <h3>🏏 Match Rules</h3>
+        <ul>
+          <li>Har match 8-8 overs ka hoga (T8 Format)</li>
+          <li>8 players har side se khelenge</li>
+          <li>Toss se decide hoga ki pehle batting ya bowling</li>
+          <li>Powerplay: First  overs mein sirf 2 fielders allowed boundary ke bahar</li>
+          <li>Ek bowler maximum 3 overs bowl kar sakta hai</li>
+          <li>No-ball pe free hit milegi</li>
+          <li>Tie hone par Super Over hoga</li>
+        </ul>
+      </div>
+      <div class="rule-card">
+        <h3>👥 Team Rules</h3>
+        <ul>
+          <li>Har team mein exactly 8 players + 3 substitutes allowed</li>
+          <li>Playing XI match se 30 min pehle submit karna hoga</li>
+          <li>Koi bhi player sirf ek team ke liye khelega</li>
+          <li>Age limit: 16+ years</li>
+          <li>Proper cricket kit (white dress) zaroori nhi hai</li>
+          <li>Playing kit mein team ka naam hona chahiye koi zaroorinhi hai</li>
+        </ul>
+      </div>
+      <div class="rule-card">
+        <h3>📋 Registration Rules</h3>
+        <ul>
+          <li>Entry fee ₹1100 per team (non-refundable)</li>
+          <li>Registration deadline: June 8, 2026</li>
+          <li>Name mandatory hai sabhi players ka</li>
+          <li>Team captain ka phone number verified hoga</li>
+          <li>Maximum 32 teams participate kar sakti hain</li>
+          <li>Pehle aao pehle khelo basis nhi hoga ye decision  hamri managment team kregi</li>
+        </ul>
+      </div>
+      <div class="rule-card">
+        <h3>⚖️ Code of Conduct</h3>
+        <ul>
+          <li>Umpire ka decision final hoga</li>
+          <li>Kisi bhi player ke saath gali-galoch allowed nahi</li>
+          <li>Arguing with umpire = immediate dismissal</li>
+          <li>Match samay par shuru karna zaroori hai</li>
+          <li>10 min delay = batting pe penalty runs</li>
+          <li>Organizers ka decision har dispute mein final hoga</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO SECTION -->
+<section class="section section-alt" id="videos">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Highlights</span>
+      <h2>Match Videos & Highlights</h2>
+      <p>Match highlights, best moments aur tournament videos</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="tabs-wrapper">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-gallery">🎬 Video Gallery</button>
+        <button class="tab-btn" data-tab="tab-upload">📤 Upload Video</button>
+      </div>
+
+      <div id="tab-gallery" class="tab-content active">
+        <div class="video-grid" id="videoGallery">
+          <!-- Loaded by JS -->
+        </div>
+      </div>
+
+      <div id="tab-upload" class="tab-content">
+        <div class="form-card">
+          <div class="form-section-title">📤 Video Upload Karein</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Video Title <span class="required">*</span></label>
+              <input type="text" id="videoTitle" placeholder="e.g., Match 1 Highlights - Team A vs Team B" />
+            </div>
+            <div class="form-group">
+              <label>Match Name</label>
+              <input type="text" id="videoMatch" placeholder="e.g., Quarter Final" />
+            </div>
+          </div>
+          <div class="upload-zone" id="uploadZone" style="margin-top:20px">
+            <input type="file" id="videoInput" accept="video/*" multiple />
+            <div class="upload-icon">🎥</div>
+            <h3>Video Drag & Drop karein ya Click karein</h3>
+            <p>MP4, AVI, MOV supported · Max size: 500MB per video</p>
+          </div>
+          <div class="success-msg" id="videoSuccess">
+            ✅ Video successfully upload ho gaya!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION FORM -->
+<section class="section" id="register">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Join Us</span>
+      <h2>Team Registration</h2>
+      <p>Apni team register karein aur tournament mein participate karein</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="tabs-wrapper">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tab-team">🏏 Team Registration</button>
+        <button class="tab-btn" data-tab="tab-player">👤 Player Participation</button>
+        <button class="tab-btn" data-tab="tab-registered">👥 Registered Players</button>
+      </div>
+
+      <!-- TEAM REGISTRATION -->
+      <div id="tab-team" class="tab-content active">
+        <div class="form-card">
+          <form id="registrationForm">
+            <div class="form-section-title">🏟️ Team Information</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Team Name <span class="required">*</span></label>
+                <input type="text" name="teamName" placeholder="Apni team ka naam likhein" required />
+              </div>
+              <div class="form-group">
+                <label>Team Home Village/City <span class="required">*</span></label>
+                <input type="text" name="teamCity" placeholder="Gaon ya sheher ka naam" required />
+              </div>
+            </div>
+
+            <div class="form-section-title">👤 Captain Details</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Captain Name <span class="required">*</span></label>
+                <input type="text" name="captainName" placeholder="Captain ka poora naam" required />
+              </div>
+              <div class="form-group">
+                <label>Mobile Number <span class="required">*</span></label>
+                <input type="tel" name="captainPhone" placeholder="10-digit mobile number" pattern="[0-9]{10}" required />
+              </div>
+              <div class="form-group">
+                <label>WhatsApp Number</label>
+                <input type="tel" name="whatsapp" placeholder="WhatsApp number (agar alag ho)" />
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="Email ID (optional)" />
+              </div>
+              <div class="form-group">
+                <label>Captain ki Batting Style <span class="required">*</span></label>
+                <select name="battingStyle" required>
+                  <option value="">Select karein</option>
+                  <option value="Right Hand">Right Hand</option>
+                  <option value="Left Hand">Left Hand</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Captain ki Bowling Style <span class="required">*</span></label>
+                <select name="bowlingStyle" required>
+                  <option value="">Select karein</option>
+                  <option value="Right Arm Fast">Right Arm Fast</option>
+                  <option value="Right Arm Medium">Right Arm Medium</option>
+                  <option value="Right Arm Off Spin">Right Arm Off Spin</option>
+                  <option value="Right Arm Leg Spin">Right Arm Leg Spin</option>
+                  <option value="Left Arm Fast">Left Arm Fast</option>
+                  <option value="Left Arm Medium">Left Arm Medium</option>
+                  <option value="Left Arm Spin">Left Arm Spin</option>
+                  <option value="Non Bowler">Non Bowler</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-section-title">👥 Playing 11 Players</div>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label>Players ke Naam (comma se alag karein) <span class="required">*</span></label>
+                <textarea name="players" placeholder="Player 1, Player 2, Player 3 ... Player 11" required></textarea>
+              </div>
+              <div class="form-group">
+                <label>Vice Captain Name <span class="required">*</span></label>
+                <input type="text" name="viceCaptain" placeholder="Vice captain ka naam" required />
+              </div>
+              <div class="form-group">
+                <label>Wicket Keeper Name <span class="required">*</span></label>
+                <input type="text" name="wicketKeeper" placeholder="Wicket keeper ka naam" required />
+              </div>
+            </div>
+
+            <div class="form-section-title">💳 Payment Details</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Payment Method <span class="required">*</span></label>
+                <select name="paymentMethod" required>
+                  <option value="">Select karein</option>
+                  <option value="UPI">UPI / GPay / PhonePe</option>
+                  <option value="Cash">Cash (Ground par aa kar)</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Transaction ID (UPI/Bank)</label>
+                <input type="text" name="txnId" placeholder="Transaction ID (UPI ke liye)" />
+              </div>
+              <div class="form-group full-width">
+                <label>Koi bhi Special Request ya Message</label>
+                <textarea name="message" placeholder="Koi sawaal ya special request..." style="min-height:80px"></textarea>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+              <input type="checkbox" id="terms" name="terms" required style="width:16px;height:16px;accent-color:var(--primary)">
+              <label for="terms" style="font-size:13px;color:#555">Main tournament ke sabhi rules aur regulations se agree karta/karti hoon.</label>
+            </div>
+
+            <button type="submit" class="btn-submit">
+              📝 Team Register Karein &rarr;
+            </button>
+          </form>
+          <div class="success-msg" id="regSuccess">
+            ✅ Registration successful ho gaya! Aapko call ya WhatsApp karke confirm kiya jaayega.
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYER PARTICIPATION -->
+      <div id="tab-player" class="tab-content">
+        <div class="form-card">
+          <form id="participationForm">
+            <div class="form-section-title">👤 Player Information</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Player ka Poora Naam <span class="required">*</span></label>
+                <input type="text" name="playerName" placeholder="Apna poora naam likhein" required />
+              </div>
+              <div class="form-group">
+                <label>Date of Birth <span class="required">*</span></label>
+                <input type="date" name="dob" required />
+              </div>
+              <div class="form-group">
+                <label>Mobile Number <span class="required">*</span></label>
+                <input type="tel" name="phone" placeholder="10-digit number" pattern="[0-9]{10}" required />
+              </div>
+              <div class="form-group">
+                <label>Village / City <span class="required">*</span></label>
+                <input type="text" name="city" placeholder="Apne gaon ya sheher ka naam" required />
+              </div>
+              <div class="form-group">
+                <label>Player Role <span class="required">*</span></label>
+                <select name="role" required>
+                  <option value="">Select karein</option>
+                  <option value="Batsman">Batsman (Balla)</option>
+                  <option value="Bowler">Bowler (Gend)</option>
+                  <option value="All-Rounder">All-Rounder</option>
+                  <option value="Wicket Keeper">Wicket Keeper</option>
+                  <option value="Wicket Keeper Batsman">Wicket Keeper + Batsman</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Batting Style <span class="required">*</span></label>
+                <select name="battingStyle" required>
+                  <option value="">Select karein</option>
+                  <option value="Right Hand">Right Hand Bat</option>
+                  <option value="Left Hand">Left Hand Bat</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Bowling Style</label>
+                <select name="bowlingStyle">
+                  <option value="">Select karein</option>
+                  <option value="Right Arm Fast">Right Arm Fast</option>
+                  <option value="Right Arm Medium">Right Arm Medium</option>
+                  <option value="Right Arm Off Spin">Right Arm Off Spin</option>
+                  <option value="Left Arm Spin">Left Arm Spin</option>
+                  <option value="Non Bowler">Non Bowler</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Jersey Number (Pasandida)</label>
+                <input type="number" name="jerseyNumber" placeholder="1-99" min="1" max="99" />
+              </div>
+              <div class="form-group full-width">
+                <label>Pichle Tournaments ka Experience</label>
+                <textarea name="experience" placeholder="Pehle kahan kahan khela hai, koi special achievement..." style="min-height:80px"></textarea>
+              </div>
+              <div class="form-group full-width">
+                <label>Apni Team hai ya Individual Entry? <span class="required">*</span></label>
+                <select name="entryType" required>
+                  <option value="">Select karein</option>
+                  <option value="With Team">Meri team already registered hai</option>
+                  <option value="Need Team">Mujhe team chahiye (organizer assign karega)</option>
+                  <option value="Register Team">Main nai team register karna chahta hoon</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Existing Team Name (agar hai)</label>
+                <input type="text" name="existingTeam" placeholder="Apni team ka naam (agar already registered)" />
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+              <input type="checkbox" id="terms2" name="terms" required style="width:16px;height:16px;accent-color:var(--primary)">
+              <label for="terms2" style="font-size:13px;color:#555">Main tournament ke sabhi rules se agree karta/karti hoon.</label>
+            </div>
+
+            <button type="submit" class="btn-submit">
+              🏏 Participation Submit Karein &rarr;
+            </button>
+          </form>
+          <div class="success-msg" id="partSuccess">
+            ✅ Aapki participation request submit ho gayi! Organizer aapse contact karega.
+          </div>
+        </div>
+      </div>
+
+      <!-- REGISTERED PLAYERS -->
+      <div id="tab-registered" class="tab-content">
+        <div class="players-grid" id="playersGrid">
+          <!-- Loaded by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="section section-alt" id="contact">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Get In Touch</span>
+      <h2>Sampark Karein</h2>
+      <p>Koi bhi sawaal ke liye hum se sampark karein</p>
+      <div class="divider"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Chiraila Cricket Tournament</h3>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <h4>Phone / WhatsApp</h4>
+            <a href="tel:+919876543210">+91 91997 52060</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <div class="contact-item-text">
+            <h4>Email</h4>
+            <a href="mailto:chirailacricket@gmail.com">chirailacricket@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <h4>Venue</h4>
+            <p>Chiraila Cricket Ground, Chiraila Village</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⏰</div>
+          <div class="contact-item-text">
+            <h4>Registration Time</h4>
+            <p>9:00 AM - 10:00 PM (Daily)</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">💰</div>
+          <div class="contact-item-text">
+            <h4>Entry Fee Payment (Cash)</h4>
+            <p>Onyl Cash on ground</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-card">
+        <h3 style="font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--primary-dark);margin-bottom:20px">Quick Message Bhejein</h3>
+        <form onsubmit="sendMessage(event)">
+          <div class="form-group" style="margin-bottom:15px">
+            <label>Naam</label>
+            <input type="text" id="msgName" placeholder="Aapka naam" required />
+          </div>
+          <div class="form-group" style="margin-bottom:15px">
+            <label>Phone</label>
+            <input type="tel" id="msgPhone" placeholder="Mobile number" required />
+          </div>
+          <div class="form-group" style="margin-bottom:15px">
+            <label>Message</label>
+            <textarea id="msgText" placeholder="Aapka sawaal ya message..." style="min-height:100px"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">📤 Message Bhejein</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>🏏 Chiraila Cricket</h2>
+        <p>Hamara gaon ka sabse bada cricket tournament. Cricket ke passion ko celebrate karte hain aur nayi talent ko mauka dete hain shine karne ka!</p>
+        <div class="social-links">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="WhatsApp">💬</a>
+          <a href="#" title="YouTube">▶️</a>
+          <a href="#" title="Instagram">📸</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">🏠 Home</a></li>
+          <li><a href="#live">🔴 Live Score</a></li>
+          <li><a href="#schedule">📅 Schedule</a></li>
+          <li><a href="#points">🏆 Points Table</a></li>
+          <li><a href="#videos">🎥 Videos</a></li>
+          <li><a href="#register">📝 Register</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Tournament</h4>
+        <ul>
+          <li><a href="#prize">🏆 Prize Money</a></li>
+          <li><a href="#rules">📋 Rules</a></li>
+          <li><a href="#contact">📞 Contact</a></li>
+          <li><a href="admin.html">⚙️ Admin Panel</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026Chiraila Cricket Tournament. Sabhi rights reserved. | Designed with ❤️ for Cricket</p>
+    </div>
+  </div>
+</footer>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModalOverlay">
+  <div class="modal" style="max-width:700px;padding:20px">
+    <button class="modal-close">✕</button>
+    <h3 id="videoModalTitle" style="font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--primary-dark);margin-bottom:15px">Video</h3>
+    <video id="modalVideo" controls style="width:100%;border-radius:8px;background:#000"></video>
+  </div>
+</div>
+
+<!-- SCROLL TO TOP -->
+<button class="scroll-top" title="Top par jaein">↑</button>
+
+<script>
+function playVideo(url, title) {
+  document.getElementById('videoModalTitle').textContent = title;
+  const player = document.getElementById('modalVideo');
+  player.src = url;
+  player.play();
+  document.getElementById('videoModalOverlay').classList.add('open');
+}
+
+document.querySelector('.modal-close').addEventListener('click', () => {
+  document.getElementById('videoModalOverlay').classList.remove('open');
+  document.getElementById('modalVideo').pause();
+});
+
+function sendMessage(e) {
+  e.preventDefault();
+  const name = document.getElementById('msgName').value;
+  showToast(`${name}, aapka message receive ho gaya! Jald sampark karenge. 📞`);
+  e.target.reset();
+}
+</script>
+<script src="script.js"></script>
+</body>
+</html>

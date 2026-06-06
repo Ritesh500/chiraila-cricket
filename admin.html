@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Chiraila Cricket</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: #f0f4f0; }
+
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 74px);
+    }
+
+    .admin-sidebar {
+      background: var(--primary-dark);
+      padding: 20px 0;
+      position: sticky;
+      top: 74px;
+      height: calc(100vh - 74px);
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      padding: 0 20px 15px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      color: var(--accent);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 10px;
+    }
+
+    .sidebar-menu { list-style: none; }
+    .sidebar-menu li { margin: 2px 0; }
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 20px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: var(--transition);
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: rgba(255,255,255,0.08);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    .admin-main { padding: 30px; overflow-y: auto; }
+
+    .admin-page { display: none; }
+    .admin-page.active { display: block; }
+
+    .page-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .page-subtitle { font-size: 14px; color: var(--gray); margin-bottom: 25px; }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--primary);
+    }
+
+    .stat-card.accent { border-top-color: var(--accent); }
+    .stat-card.red { border-top-color: var(--red); }
+    .stat-card.green { border-top-color: #27ae60; }
+
+    .stat-card-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .stat-card-label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-card-icon { font-size: 28px; float: right; margin-top: -30px; }
+
+    .admin-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .admin-card-header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-card-header h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 20px;
+      color: var(--white);
+    }
+
+    .admin-card-body { padding: 25px; }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .btn-green { background: #27ae60; color: white; }
+    .btn-green:hover { background: #219a52; }
+    .btn-red { background: var(--red); color: white; }
+    .btn-red:hover { background: #a93226; }
+    .btn-yellow { background: var(--accent); color: var(--primary-dark); }
+    .btn-yellow:hover { background: var(--accent-dark); }
+    .btn-blue { background: #2980b9; color: white; }
+    .btn-blue:hover { background: #2471a3; }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      background: #f5f5f5;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+
+    .data-table tr:hover td { background: rgba(26,71,42,0.03); }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-live { background: #fde8e8; color: var(--red); }
+    .badge-completed { background: #d4edda; color: #155724; }
+    .badge-upcoming { background: #fff3cd; color: #856404; }
+
+    .score-input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .input-inline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { position: static; height: auto; }
+      .stats-cards { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🏏</div>
+      <div class="logo-text">
+        <h1>CHIRAILA CRICKET</h1>
+        <span>Admin Panel</span>
+      </div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html">🌐 Website</a></li>
+      <li><a href="#" onclick="showPage('dashboard')">📊 Dashboard</a></li>
+    </ul>
+    <div class="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-title">⚙️ Admin Menu</div>
+    <ul class="sidebar-menu">
+      <li><a href="#" onclick="showPage('dashboard')" class="active" id="menu-dashboard">📊 Dashboard</a></li>
+      <li><a href="#" onclick="showPage('live-score')" id="menu-live-score">🔴 Live Score Update</a></li>
+      <li><a href="#" onclick="showPage('teams')" id="menu-teams">👥 Teams Manage</a></li>
+      <li><a href="#" onclick="showPage('matches')" id="menu-matches">🏏 Matches</a></li>
+      <li><a href="#" onclick="showPage('registrations')" id="menu-registrations">📝 Registrations</a></li>
+      <li><a href="#" onclick="showPage('participants')" id="menu-participants">👤 Participants</a></li>
+      <li><a href="#" onclick="showPage('points')" id="menu-points">🏆 Points Table</a></li>
+      <li><a href="#" onclick="showPage('videos-admin')" id="menu-videos-admin">🎥 Videos</a></li>
+      <li><a href="#" onclick="showPage('settings')" id="menu-settings">⚙️ Settings</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-main">
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="admin-page active">
+      <div class="page-title">📊 Dashboard</div>
+      <div class="page-subtitle">Chiraila Cricket Tournament ka overview</div>
+
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-card-icon">👥</div>
+          <div class="stat-card-num" id="dashTeams">0</div>
+          <div class="stat-card-label">Registered Teams</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-card-icon">🏏</div>
+          <div class="stat-card-num" id="dashMatches">0</div>
+          <div class="stat-card-label">Total Matches</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-card-icon">👤</div>
+          <div class="stat-card-num" id="dashPlayers">0</div>
+          <div class="stat-card-label">Registrations</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-icon">🎥</div>
+          <div class="stat-card-num" id="dashVideos">0</div>
+          <div class="stat-card-label">Videos Uploaded</div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>📋 Recent Registrations</h3></div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Team Name</th>
+                <th>Captain</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+            <tbody id="dashRecentReg">
+              <tr><td colspan="5" style="text-align:center;color:#888;padding:20px">Koi registration nahi hai abhi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE SCORE UPDATE -->
+    <div id="page-live-score" class="admin-page">
+      <div class="page-title">🔴 Live Score Update</div>
+      <div class="page-subtitle">Match ka real-time score update karein</div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Live Match Score Daalein / Update Karein</h3>
+          <button class="btn-sm btn-green" onclick="addNewMatch()">+ New Match</button>
+        </div>
+        <div class="admin-card-body">
+          <div id="matchForms">
+            <!-- Match forms loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Sabhi Matches</h3></div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Match</th>
+                <th>Team 1</th>
+                <th>Team 2</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="matchesTable">
+              <tr><td colspan="6" style="text-align:center;color:#888;padding:20px">Koi match nahi hai</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAMS -->
+    <div id="page-teams" class="admin-page">
+      <div class="page-title">👥 Teams Manage</div>
+      <div class="page-subtitle">Tournament mein participate kar rahi teams</div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Team Add Karein</h3>
+        </div>
+        <div class="admin-card-body">
+          <form onsubmit="addTeam(event)">
+            <div class="score-input-grid">
+              <div class="form-group">
+                <label>Team Name</label>
+                <input type="text" id="newTeamName" placeholder="Team ka naam" required />
+              </div>
+              <div class="form-group">
+                <label>Captain Name</label>
+                <input type="text" id="newTeamCaptain" placeholder="Captain ka naam" />
+              </div>
+            </div>
+            <button type="submit" class="btn-submit" style="margin-top:15px">+ Team Add Karein</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Registered Teams</h3></div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team Name</th>
+                <th>Captain</th>
+                <th>P</th>
+                <th>W</th>
+                <th>L</th>
+                <th>Points</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teamsTable">
+              <tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Koi team nahi hai</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATCHES SCHEDULE -->
+    <div id="page-matches" class="admin-page">
+      <div class="page-title">🏏 Matches Manage</div>
+      <div class="page-subtitle">Match schedule aur results manage karein</div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Naya Match Schedule Karein</h3></div>
+        <div class="admin-card-body">
+          <form onsubmit="scheduleMatch(event)">
+            <div class="score-input-grid">
+              <div class="form-group">
+                <label>Match Name</label>
+                <input type="text" id="schMatchName" placeholder="e.g., Group A - Match 1" required />
+              </div>
+              <div class="form-group">
+                <label>Match Date</label>
+                <input type="date" id="schDate" required />
+              </div>
+              <div class="form-group">
+                <label>Team 1</label>
+                <input type="text" id="schTeam1" placeholder="Team 1 naam" required />
+              </div>
+              <div class="form-group">
+                <label>Team 2</label>
+                <input type="text" id="schTeam2" placeholder="Team 2 naam" required />
+              </div>
+              <div class="form-group">
+                <label>Time</label>
+                <input type="time" id="schTime" required />
+              </div>
+              <div class="form-group">
+                <label>Venue</label>
+                <input type="text" id="schVenue" value="Chiraila Cricket Ground" />
+              </div>
+            </div>
+            <button type="submit" class="btn-submit" style="margin-top:15px">📅 Match Schedule Karein</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRATIONS -->
+    <div id="page-registrations" class="admin-page">
+      <div class="page-title">📝 Team Registrations</div>
+      <div class="page-subtitle">Sabhi registered teams ki list</div>
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Registrations (<span id="regCount">0</span>)</h3>
+          <button class="btn-sm btn-red" onclick="clearRegistrations()">🗑️ Clear All</button>
+        </div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table" id="regTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>Captain</th>
+                <th>Phone</th>
+                <th>Players</th>
+                <th>Payment</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="regTableBody">
+              <tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Koi registration nahi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARTICIPANTS -->
+    <div id="page-participants" class="admin-page">
+      <div class="page-title">👤 Individual Participants</div>
+      <div class="page-subtitle">Individual players ki participation requests</div>
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>Participants (<span id="partCount">0</span>)</h3>
+          <button class="btn-sm btn-red" onclick="clearParticipants()">🗑️ Clear All</button>
+        </div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Player</th>
+                <th>Role</th>
+                <th>City</th>
+                <th>Phone</th>
+                <th>Entry Type</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="partTableBody">
+              <tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Koi participant nahi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- POINTS TABLE ADMIN -->
+    <div id="page-points" class="admin-page">
+      <div class="page-title">🏆 Points Table Update</div>
+      <div class="page-subtitle">Teams ke points aur stats update karein</div>
+
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Team Points Update</h3></div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>Played</th>
+                <th>Won</th>
+                <th>Lost</th>
+                <th>NR</th>
+                <th>NRR</th>
+                <th>Points</th>
+                <th>Save</th>
+              </tr>
+            </thead>
+            <tbody id="pointsAdminBody">
+              <tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Pehle teams add karein</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEOS ADMIN -->
+    <div id="page-videos-admin" class="admin-page">
+      <div class="page-title">🎥 Videos Manage</div>
+      <div class="page-subtitle">Uploaded videos ki list</div>
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3>All Videos (<span id="videoCount">0</span>)</h3>
+          <button class="btn-sm btn-red" onclick="clearVideos()">🗑️ Clear All</button>
+        </div>
+        <div class="admin-card-body" style="padding:0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Match</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="videosAdminBody">
+              <tr><td colspan="5" style="text-align:center;color:#888;padding:20px">Koi video nahi</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="page-settings" class="admin-page">
+      <div class="page-title">⚙️ Tournament Settings</div>
+      <div class="page-subtitle">Tournament ki basic information update karein</div>
+      <div class="admin-card">
+        <div class="admin-card-header"><h3>Tournament Details</h3></div>
+        <div class="admin-card-body">
+          <form onsubmit="saveSettings(event)">
+            <div class="score-input-grid">
+              <div class="form-group">
+                <label>Tournament Name</label>
+                <input type="text" id="settName" value="Chiraila Cricket Tournament 2025" />
+              </div>
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" id="settStartDate" />
+              </div>
+              <div class="form-group">
+                <label>Venue</label>
+                <input type="text" id="settVenue" value="Chiraila Cricket Ground" />
+              </div>
+              <div class="form-group">
+                <label>Entry Fee (₹)</label>
+                <input type="number" id="settFee" value="500" />
+              </div>
+              <div class="form-group">
+                <label>Organizer Phone</label>
+                <input type="tel" id="settPhone" value="+91 98765 43210" />
+              </div>
+              <div class="form-group">
+                <label>UPI ID</label>
+                <input type="text" id="settUpi" value="chirailacricket@upi" />
+              </div>
+              <div class="form-group">
+                <label>Winner Prize (₹)</label>
+                <input type="number" id="settPrize1" value="25000" />
+              </div>
+              <div class="form-group">
+                <label>Runner-up Prize (₹)</label>
+                <input type="number" id="settPrize2" value="15000" />
+              </div>
+            </div>
+            <button type="submit" class="btn-submit" style="margin-top:15px">💾 Settings Save Karein</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="admin-card" style="margin-top:25px">
+        <div class="admin-card-header" style="background:linear-gradient(135deg,#7b241c,#c0392b)">
+          <h3>⚠️ Danger Zone</h3>
+        </div>
+        <div class="admin-card-body">
+          <p style="font-size:13px;color:#888;margin-bottom:15px">Yeh actions undo nahi ho sakte.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-sm btn-red" onclick="if(confirm('Sabhi data delete karein?')) clearAll()">🗑️ Sabhi Data Clear Karein</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<button class="scroll-top">↑</button>
+
+<script src="script.js"></script>
+<script>
+// ---- ADMIN PAGE NAVIGATION ----
+function showPage(page) {
+  document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  const menu = document.getElementById('menu-' + page);
+  if (el) el.classList.add('active');
+  if (menu) menu.classList.add('active');
+
+  // Load data for the page
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'registrations') loadRegistrationsTable();
+  if (page === 'participants') loadParticipantsTable();
+  if (page === 'teams') loadTeamsTable();
+  if (page === 'matches' || page === 'live-score') loadMatchForms();
+  if (page === 'points') loadPointsAdmin();
+  if (page === 'videos-admin') loadVideosAdmin();
+}
+
+// ---- DASHBOARD ----
+function loadDashboard() {
+  const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+  const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  const regs = JSON.parse(localStorage.getItem('registrations') || '[]');
+  const videos = JSON.parse(localStorage.getItem('videos') || '[]');
+
+  document.getElementById('dashTeams').textContent = teams.length;
+  document.getElementById('dashMatches').textContent = matches.length;
+  document.getElementById('dashPlayers').textContent = regs.length;
+  document.getElementById('dashVideos').textContent = videos.length;
+
+  const tbody = document.getElementById('dashRecentReg');
+  if (regs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:20px">Koi registration nahi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = regs.slice(-5).reverse().map(r => `
+    <tr>
+      <td><strong>${r.teamName || '-'}</strong></td>
+      <td>${r.captainName || '-'}</td>
+      <td>${r.captainPhone || '-'}</td>
+      <td>${r.date}</td>
+      <td><span class="badge ${r.paymentMethod === 'Cash' ? 'badge-upcoming' : 'badge-completed'}">${r.paymentMethod || 'Pending'}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ---- MATCH FORMS (Live Score) ----
+function addNewMatch() {
+  const container = document.getElementById('matchForms');
+  const id = 'match_' + Date.now();
+  const div = document.createElement('div');
+  div.id = id;
+  div.style.cssText = 'border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:20px';
+  div.innerHTML = `
+    <h4 style="font-family:'Rajdhani',sans-serif;font-size:18px;color:var(--primary-dark);margin-bottom:15px">New Match</h4>
+    <form onsubmit="saveMatch(event, '${id}')">
+      <div class="score-input-grid">
+        <div class="form-group">
+          <label>Match Name</label>
+          <input type="text" name="matchName" placeholder="e.g., Semi Final 1" required />
+        </div>
+        <div class="form-group">
+          <label>Match Status</label>
+          <select name="status" required>
+            <option value="upcoming">Upcoming</option>
+            <option value="live">🔴 LIVE</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Team 1 Name</label>
+          <input type="text" name="team1" placeholder="Team 1" required />
+        </div>
+        <div class="form-group">
+          <label>Team 2 Name</label>
+          <input type="text" name="team2" placeholder="Team 2" required />
+        </div>
+        <div class="form-group">
+          <label>Team 1 Score (e.g., 145/6)</label>
+          <input type="text" name="score1" placeholder="145/6" />
+        </div>
+        <div class="form-group">
+          <label>Team 1 Overs</label>
+          <input type="text" name="overs1" placeholder="18.4" />
+        </div>
+        <div class="form-group">
+          <label>Team 2 Score</label>
+          <input type="text" name="score2" placeholder="Yet to bat / 120/4" />
+        </div>
+        <div class="form-group">
+          <label>Team 2 Overs</label>
+          <input type="text" name="overs2" placeholder="15.2" />
+        </div>
+        <div class="form-group">
+          <label>Current Run Rate</label>
+          <input type="text" name="crr" placeholder="7.85" />
+        </div>
+        <div class="form-group">
+          <label>Required Run Rate</label>
+          <input type="text" name="rrr" placeholder="9.23" />
+        </div>
+        <div class="form-group">
+          <label>Venue</label>
+          <input type="text" name="venue" value="Chiraila Cricket Ground" />
+        </div>
+        <div class="form-group">
+          <label>Match Date</label>
+          <input type="date" name="date" />
+        </div>
+        <div class="form-group">
+          <label>Match Time</label>
+          <input type="time" name="time" />
+        </div>
+        <div class="form-group">
+          <label>Result / Commentary</label>
+          <input type="text" name="commentary" placeholder="Team A ne 25 runs se jeeta!" />
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:15px">
+        <button type="submit" class="btn-sm btn-green">💾 Save Match</button>
+        <button type="button" class="btn-sm btn-red" onclick="document.getElementById('${id}').remove()">✕ Cancel</button>
+      </div>
+    </form>
+  `;
+  container.prepend(div);
+}
+
+function saveMatch(e, formId) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const match = { id: Date.now() };
+  data.forEach((val, key) => { match[key] = val; });
+
+  const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  matches.push(match);
+  localStorage.setItem('matches', JSON.stringify(matches));
+
+  showToast('Match saved! Website pe live ho gaya. ✅');
+  document.getElementById(formId).remove();
+  loadMatchesTable();
+}
+
+function loadMatchForms() {
+  loadMatchesTable();
+}
+
+function loadMatchesTable() {
+  const tbody = document.getElementById('matchesTable');
+  if (!tbody) return;
+  const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  if (matches.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#888;padding:20px">Koi match nahi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = matches.map((m, i) => `
+    <tr>
+      <td>${m.matchName || 'Match ' + (i+1)}</td>
+      <td>${m.team1}</td>
+      <td>${m.team2}</td>
+      <td>${m.score1 || '-'} vs ${m.score2 || '-'}</td>
+      <td><span class="badge badge-${m.status}">${m.status}</span></td>
+      <td>
+        <button class="btn-sm btn-red" onclick="deleteMatch(${m.id})">🗑️</button>
+        <button class="btn-sm btn-yellow" onclick="makeMatchLive(${m.id})">🔴 Live</button>
+        <button class="btn-sm btn-green" onclick="makeMatchComplete(${m.id})">✅ Done</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function deleteMatch(id) {
+  let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  matches = matches.filter(m => m.id !== id);
+  localStorage.setItem('matches', JSON.stringify(matches));
+  loadMatchesTable();
+  showToast('Match deleted.', 'error');
+}
+
+function makeMatchLive(id) {
+  let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  const m = matches.find(x => x.id === id);
+  if (m) m.status = 'live';
+  localStorage.setItem('matches', JSON.stringify(matches));
+  loadMatchesTable();
+  showToast('Match LIVE ho gaya! 🔴');
+}
+
+function makeMatchComplete(id) {
+  const result = prompt('Match result kya tha? (e.g., Team A ne 25 runs se jeeta)');
+  let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  const m = matches.find(x => x.id === id);
+  if (m) { m.status = 'completed'; m.result = result || ''; }
+  localStorage.setItem('matches', JSON.stringify(matches));
+  loadMatchesTable();
+  showToast('Match completed! ✅');
+}
+
+// ---- TEAMS ----
+function addTeam(e) {
+  e.preventDefault();
+  const name = document.getElementById('newTeamName').value.trim();
+  const captain = document.getElementById('newTeamCaptain').value.trim();
+  if (!name) return;
+  const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+  if (teams.find(t => t.name.toLowerCase() === name.toLowerCase())) {
+    showToast('Is naam ki team already exist karti hai.', 'error');
+    return;
+  }
+  teams.push({ id: Date.now(), name, captain, played: 0, won: 0, lost: 0, nr: 0, nrr: '+0.000', points: 0 });
+  localStorage.setItem('teams', JSON.stringify(teams));
+  showToast(`${name} team add ho gayi! ✅`);
+  e.target.reset();
+  loadTeamsTable();
+}
+
+function loadTeamsTable() {
+  const tbody = document.getElementById('teamsTable');
+  if (!tbody) return;
+  const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+  if (teams.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Koi team nahi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = teams.map((t, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${t.name}</strong></td>
+      <td>${t.captain || '-'}</td>
+      <td>${t.played}</td>
+      <td>${t.won}</td>
+      <td>${t.lost}</td>
+      <td><strong>${t.points}</strong></td>
+      <td>
+        <button class="btn-sm btn-red" onclick="deleteTeam(${t.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+  loadPointsAdmin();
+}
+
+function deleteTeam(id) {
+  if (!confirm('Team delete karein?')) return;
+  let teams = JSON.parse(localStorage.getItem('teams') || '[]');
+  teams = teams.filter(t => t.id !== id);
+  localStorage.setItem('teams', JSON.stringify(teams));
+  loadTeamsTable();
+  showToast('Team deleted.', 'error');
+}
+
+// ---- SCHEDULE ----
+function scheduleMatch(e) {
+  e.preventDefault();
+  const match = {
+    id: Date.now(),
+    matchName: document.getElementById('schMatchName').value,
+    date: document.getElementById('schDate').value,
+    team1: document.getElementById('schTeam1').value,
+    team2: document.getElementById('schTeam2').value,
+    time: document.getElementById('schTime').value,
+    venue: document.getElementById('schVenue').value,
+    status: 'upcoming',
+    score1: '', score2: ''
+  };
+  const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+  matches.push(match);
+  localStorage.setItem('matches', JSON.stringify(matches));
+  showToast('Match scheduled! 📅');
+  e.target.reset();
+  document.getElementById('schVenue').value = 'Chiraila Cricket Ground';
+}
+
+// ---- REGISTRATIONS ----
+function loadRegistrationsTable() {
+  const regs = JSON.parse(localStorage.getItem('registrations') || '[]');
+  document.getElementById('regCount').textContent = regs.length;
+  const tbody = document.getElementById('regTableBody');
+  if (regs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Koi registration nahi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = regs.map((r, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${r.teamName}</strong></td>
+      <td>${r.captainName}</td>
+      <td>${r.captainPhone}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${r.players || '-'}</td>
+      <td><span class="badge badge-${r.paymentMethod === 'UPI' ? 'completed' : 'upcoming'}">${r.paymentMethod || 'Pending'}</span></td>
+      <td>${r.date}</td>
+      <td><button class="btn-sm btn-red" onclick="deleteReg(${r.id})">🗑️</button></td>
+    </tr>
+  `).join('');
+}
+
+function deleteReg(id) {
+  let regs = JSON.parse(localStorage.getItem('registrations') || '[]');
+  regs = regs.filter(r => r.id !== id);
+  localStorage.setItem('registrations', JSON.stringify(regs));
+  loadRegistrationsTable();
+  showToast('Registration deleted.', 'error');
+}
+
+function clearRegistrations() {
+  if (!confirm('Sabhi registrations delete karein?')) return;
+  localStorage.removeItem('registrations');
+  loadRegistrationsTable();
+  showToast('All registrations cleared.', 'error');
+}
+
+// ---- PARTICIPANTS ----
+function loadParticipantsTable() {
+  const parts = JSON.parse(localStorage.getItem('participants') || '[]');
+  document.getElementById('partCount').textContent = parts.length;
+  const tbody = document.getElementById('partTableBody');
+  if (parts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Koi participant nahi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = parts.map((p, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${p.playerName}</strong></td>
+      <td>${p.role || '-'}</td>
+      <td>${p.city || '-'}</td>
+      <td>${p.phone}</td>
+      <td><span class="badge badge-upcoming">${p.entryType || '-'}</span></td>
+      <td>${p.date}</td>
+      <td><button class="btn-sm btn-red" onclick="deletePart(${p.id})">🗑️</button></td>
+    </tr>
+  `).join('');
+}
+
+function deletePart(id) {
+  let parts = JSON.parse(localStorage.getItem('participants') || '[]');
+  parts = parts.filter(p => p.id !== id);
+  localStorage.setItem('participants', JSON.stringify(parts));
+  loadParticipantsTable();
+}
+
+function clearParticipants() {
+  if (!confirm('Sabhi participants delete karein?')) return;
+  localStorage.removeItem('participants');
+  loadParticipantsTable();
+}
+
+// ---- POINTS TABLE ADMIN ----
+function loadPointsAdmin() {
+  const tbody = document.getElementById('pointsAdminBody');
+  if (!tbody) return;
+  const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+  if (teams.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:20px">Pehle teams add karein</td></tr>';
+    return;
+  }
+  tbody.innerHTML = teams.map(t => `
+    <tr>
+      <td><strong>${t.name}</strong></td>
+      <td><input type="number" value="${t.played}" min="0" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px" onchange="updateTeamStat(${t.id},'played',this.value)"></td>
+      <td><input type="number" value="${t.won}" min="0" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px" onchange="updateTeamStat(${t.id},'won',this.value)"></td>
+      <td><input type="number" value="${t.lost}" min="0" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px" onchange="updateTeamStat(${t.id},'lost',this.value)"></td>
+      <td><input type="number" value="${t.nr}" min="0" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px" onchange="updateTeamStat(${t.id},'nr',this.value)"></td>
+      <td><input type="text" value="${t.nrr}" style="width:70px;padding:4px;border:1px solid #ddd;border-radius:4px" onchange="updateTeamStat(${t.id},'nrr',this.value)"></td>
+      <td><input type="number" value="${t.points}" min="0" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:4px;font-weight:700" onchange="updateTeamStat(${t.id},'points',this.value)"></td>
+      <td><button class="btn-sm btn-green" onclick="showToast('Stats saved! ✅')">💾</button></td>
+    </tr>
+  `).join('');
+}
+
+function updateTeamStat(id, field, value) {
+  let teams = JSON.parse(localStorage.getItem('teams') || '[]');
+  const team = teams.find(t => t.id === id);
+  if (team) team[field] = isNaN(value) ? value : Number(value);
+  localStorage.setItem('teams', JSON.stringify(teams));
+}
+
+// ---- VIDEOS ADMIN ----
+function loadVideosAdmin() {
+  const videos = JSON.parse(localStorage.getItem('videos') || '[]');
+  document.getElementById('videoCount').textContent = videos.length;
+  const tbody = document.getElementById('videosAdminBody');
+  if (videos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:20px">Koi video nahi</td></tr>';
+    return;
+  }
+  tbody.innerHTML = videos.map((v, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${v.title}</strong></td>
+      <td>${v.match || '-'}</td>
+      <td>${v.date}</td>
+      <td><button class="btn-sm btn-red" onclick="deleteVideo(${v.id})">🗑️ Delete</button></td>
+    </tr>
+  `).join('');
+}
+
+function deleteVideo(id) {
+  let videos = JSON.parse(localStorage.getItem('videos') || '[]');
+  videos = videos.filter(v => v.id !== id);
+  localStorage.setItem('videos', JSON.stringify(videos));
+  loadVideosAdmin();
+  showToast('Video deleted.', 'error');
+}
+
+function clearVideos() {
+  if (!confirm('Sabhi videos delete karein?')) return;
+  localStorage.removeItem('videos');
+  loadVideosAdmin();
+}
+
+// ---- SETTINGS ----
+function saveSettings(e) {
+  e.preventDefault();
+  const settings = {
+    name: document.getElementById('settName').value,
+    startDate: document.getElementById('settStartDate').value,
+    venue: document.getElementById('settVenue').value,
+    fee: document.getElementById('settFee').value,
+    phone: document.getElementById('settPhone').value,
+    upi: document.getElementById('settUpi').value,
+    prize1: document.getElementById('settPrize1').value,
+    prize2: document.getElementById('settPrize2').value,
+  };
+  localStorage.setItem('settings', JSON.stringify(settings));
+  showToast('Settings saved! ✅');
+}
+
+function clearAll() {
+  localStorage.clear();
+  showToast('Sabhi data clear ho gaya.', 'error');
+  loadDashboard();
+}
+
+// Load dashboard on start
+loadDashboard();
+</script>
+</body>
+</html>
