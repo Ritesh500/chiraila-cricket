@@ -195,9 +195,144 @@
       .admin-sidebar { position: static; height: auto; }
       .stats-cards { grid-template-columns: repeat(2, 1fr); }
     }
+  /* ===== LOGIN OVERLAY ===== */
+  #loginOverlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0d2818 0%, #1a472a 60%, #2d6a4f 100%);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 45px 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    text-align: center;
+  }
+
+  .login-logo {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #1a472a, #2d6a4f);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 20px rgba(26,71,42,0.3);
+  }
+
+  .login-box h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0d2818;
+    margin-bottom: 5px;
+  }
+
+  .login-box p {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 28px;
+  }
+
+  .login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .login-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .login-field input {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .login-field input:focus { border-color: #1a472a; }
+
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #1a472a, #2d6a4f);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 6px;
+    transition: opacity 0.2s, transform 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .login-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+
+  .login-error {
+    display: none;
+    background: #fde8e8;
+    border: 1px solid #f5c6cb;
+    color: #c0392b;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-top: 12px;
+    font-weight: 500;
+  }
+
+  .login-error.show { display: block; }
+
+  .login-hint {
+    margin-top: 18px;
+    font-size: 11px;
+    color: #bbb;
+  }
   </style>
 </head>
 <body>
+
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">🏏</div>
+    <h2>Admin Login</h2>
+    <p>Chiraila Cricket Admin Panel</p>
+    <form onsubmit="doLogin(event)">
+      <div class="login-field">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Admin username" autocomplete="username" required />
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Admin password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="login-btn">🔐 Login Karein</button>
+      <div class="login-error" id="loginError">❌ Galat username ya password. Dobara try karein.</div>
+    </form>
+    <div class="login-hint">Authorized personnel only</div>
+  </div>
+</div>
 
 <!-- NAVBAR -->
 <nav class="navbar">
@@ -1040,6 +1175,43 @@ function clearAll() {
 
 // Load dashboard on start
 loadDashboard();
+
+// ===== ADMIN LOGIN =====
+const ADMIN_CREDENTIALS = [
+  { username: 'admin', password: 'chiraila@2026' },
+  { username: 'chiraila', password: 'cricket2026' }
+];
+
+const SESSION_KEY = 'chiraila_admin_auth';
+
+function checkAuth() {
+  const auth = sessionStorage.getItem(SESSION_KEY);
+  if (auth === 'true') {
+    document.getElementById('loginOverlay').style.display = 'none';
+  }
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errorEl = document.getElementById('loginError');
+
+  const valid = ADMIN_CREDENTIALS.some(c => c.username === user && c.password === pass);
+  if (valid) {
+    sessionStorage.setItem(SESSION_KEY, 'true');
+    document.getElementById('loginOverlay').style.display = 'none';
+    errorEl.classList.remove('show');
+    showToast('Login successful! Welcome 🏏');
+  } else {
+    errorEl.classList.add('show');
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+  }
+}
+
+// Block back-button bypass
+checkAuth();
 </script>
 </body>
 </html>
